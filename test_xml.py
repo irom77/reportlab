@@ -29,7 +29,9 @@ def test_replace_xml_content():
     assert root.find(".//tag3") is not None, "<tag3> element not found"
     assert root.find(".//tag3").text == "Original content 3", "Content of <tag3> does not match"
     assert root.find(".//tag2") is not None, "<tag2> element not found"
-    assert root.find(".//tag2").text == "new tag2 <tag>qwerty qaz<tag/>", "Content of <tag2> does not match"
+    tag2_element = root.find(".//tag2")
+    assert tag2_element is not None, "<tag2> element not found"
+    assert tag2_element.text == "new tag2 <tag>qwerty qaz<tag/>", f"Content of <tag2> does not match. Actual: {tag2_element.text}"
     assert root.find(".//tag1") is not None, "<tag1> element not found"
     assert root.find(".//tag4") is not None, "<tag4> element not found"
     assert root.find(".//tag4").text == "new tag4", "Content of <tag4> does not match"

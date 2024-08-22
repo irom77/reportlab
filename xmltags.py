@@ -9,9 +9,8 @@ def replace_xml_content(input_file, output_file, tags):
     def process_element(element):
         tag = element.tag
         if tag in tags and tags[tag] is not None:
+            element.clear()  # Clear existing content and children
             element.text = str(tags[tag])
-            # Clear any existing child elements
-            element.clear()
         for child in list(element):
             process_element(child)
 
