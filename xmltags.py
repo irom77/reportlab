@@ -11,12 +11,13 @@ def replace_xml_content(input_file, output_file, tags):
         if tag in tags:
             if tags[tag] is None:
                 # Preserve the tag but clear its content
-                element.text = None
                 element.clear()
+                element.text = None
             else:
                 # Replace the content
+                for child in list(element):
+                    element.remove(child)
                 element.text = str(tags[tag])
-                element.clear()
         for child in list(element):
             process_element(child)
 
