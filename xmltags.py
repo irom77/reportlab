@@ -36,14 +36,15 @@ def replace_xml_content(input_file, output_file, tags):
             result += f' {attributes}'
         if elem.text or len(elem):
             result += '>'
-            if elem.text and elem.text.strip():
-                result += f'\n{indent}  {elem.text.strip()}\n'
+            if elem.text:
+                result += elem.text
             for child in elem:
                 result += element_to_string(child, level + 1)
-            result += f'{indent}</{elem.tag}>'
+            result += f'</{elem.tag}>'
         else:
             result += '/>'
-        result += '\n'
+        if level > 0:
+            result = '\n' + result
         return result
 
     modified_content = element_to_string(root)
@@ -51,7 +52,7 @@ def replace_xml_content(input_file, output_file, tags):
     # Write the modified content to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(modified_content)
+        f.write(modified_content.strip() + '\n')
 
     return tree
 
