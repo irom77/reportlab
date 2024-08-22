@@ -8,9 +8,15 @@ def replace_xml_content(input_file, output_file, tags):
     # Function to recursively process elements
     def process_element(element):
         tag = element.tag
-        if tag in tags and tags[tag] is not None:
-            element.clear()  # Clear existing content and children
-            element.text = str(tags[tag])
+        if tag in tags:
+            if tags[tag] is None:
+                # Preserve the tag but clear its content
+                element.text = None
+                element.clear()
+            else:
+                # Replace the content
+                element.text = str(tags[tag])
+                element.clear()
         for child in list(element):
             process_element(child)
 
@@ -18,7 +24,7 @@ def replace_xml_content(input_file, output_file, tags):
     process_element(root)
 
     # Write the modified XML to the output file
-    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    tree.write(output_file, encoding='utf-8', xml_declaration=True, short_empty_elements=False)
     return tree
 
 def get_para_by_tag(file_path, tag):
