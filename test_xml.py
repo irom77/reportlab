@@ -4,15 +4,15 @@ from xml.etree import ElementTree as ET
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
 # <root>
-# <content>
-#       <para><tag1></tag1>qwerty</para>
-#       <para><tag4>qaz</tag4>asdfgh</para>
-#       <tag2>Original content 2</tag2>
-#       <sect><tag3>Original content 3</tag3></sect>
-#       <tag3>Original content 3</tag3>
-#       <tag5>Semicolon, inside</tag5>
-#       <sect><tag5>Semicolon, inside</tag5></sect>
-# </content>    
+#   <content>
+#     <para><tag1></tag1>qwerty</para>
+#     <para><tag4>qaz</tag4>asdfgh</para>
+#     <tag2>Original content 2</tag2>
+#     <sect><tag3>Original content 3</tag3></sect>
+#     <tag3>Original content 3</tag3>
+#     <tag5>Semicolon, inside</tag5>
+#     <sect><tag5>Semicolon, inside</tag5></sect>
+#   </content>
 # </root>
 
 def test_replace_xml_content():
