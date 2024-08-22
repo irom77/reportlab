@@ -1,6 +1,10 @@
 import xml.etree.ElementTree as ET
 
 def replace_xml_content(input_file, output_file, tags):
+    # Read the original file to preserve formatting
+    with open(input_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
     # Parse the XML file
     tree = ET.parse(input_file)
     root = tree.getroot()
@@ -12,7 +16,7 @@ def replace_xml_content(input_file, output_file, tags):
             if tags[tag] is None:
                 # Preserve the tag but clear its content
                 element.text = None
-                element.clear()
+                element[:] = []  # Remove all children
             else:
                 # Replace the content
                 element.text = str(tags[tag])
@@ -23,8 +27,18 @@ def replace_xml_content(input_file, output_file, tags):
     # Process the root and all its children
     process_element(root)
 
-    # Write the modified XML to the output file, preserving original formatting
-    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    # Convert the modified tree to a string
+    modified_content = ET.tostring(root, encoding='unicode', method='xml')
+
+    # Replace the content between root tags in the original file
+    start = content.index('<root')
+    end = content.rindex('</root>') + len('</root>')
+    new_content = content[:start] + modified_content + content[end:]
+
+    # Write the modified content to the output file
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        f.write(new_content[new_content.index('<root'):])
 
     return tree
 
