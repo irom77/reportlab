@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <content>
+    <para>
+      <tag1/>
+    </para>
+    <para>
+      <tag4>new tag4</tag4>
+    </para>
+    <tag2>new tag2 &lt;tag&gt;qwerty qaz&lt;tag/&gt;</tag2>
+    <sect>
+      <tag3>Original content 3</tag3>
+    </sect>
+    <tag3>Original content 3</tag3>
+    <tag5>Semicolon, inside</tag5>
+    <sect>
+      <tag5>Semicolon, inside</tag5>
+    </sect>
+  </content>
+</root>

@@ -51,12 +51,13 @@ def test_replace_xml_content():
 # </root>
 def test2_replace_xml_content():
     tags1={
-        'tag1': None,
-        'tag2': 'new tag2 <tag>qwerty qaz<tag/>',
-        'tag4': 'new tag4',
+        'between_dates': 'From July 1 to 30',
+        'inbound_messages': '10',
+        'blocked_messages': '5',
+        'delivered_messages': '5'
     }
 
-    replace_xml_content('tests/input.xml', 'tests/_output.xml', tags1)
+    replace_xml_content('tests/_input.xml', 'tests/_output.xml', tags1)
     
     # Read and compare the contents of _output.xml and _expected_output.xml
     with open('tests/_output.xml', 'r') as output_file, open('tests/_expected_output.xml', 'r') as expected_file:
