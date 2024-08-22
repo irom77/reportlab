@@ -51,14 +51,19 @@ def test_replace_xml_content():
 # </root>
 def test2_replace_xml_content():
     tags1={
-        'between_dates': "From July 1 to 30",
-        'inbound_messages': '10',
-        'blocked_messages': '5',
-        'delivered_messages': '5',
+        'tag1': None,
+        'tag2': 'new tag2 <tag>qwerty qaz<tag/>',
+        'tag4': 'new tag4',
     }
 
-    result_tree = replace_xml_content('tests/_input.xml', 'tests/_output.xml', tags1)
-    result_tree = ET.parse('tests/_output.xml')
+    replace_xml_content('tests/input.xml', 'tests/_output.xml', tags1)
+    
+    # Read and compare the contents of _output.xml and _expected_output.xml
+    with open('tests/_output.xml', 'r') as output_file, open('tests/_expected_output.xml', 'r') as expected_file:
+        output_content = output_file.read()
+        expected_content = expected_file.read()
+    
+    assert output_content == expected_content, "The generated _output.xml does not match _expected_output.xml"
 
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
