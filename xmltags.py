@@ -43,7 +43,12 @@ def get_para_by_tag(file_path, tag):
     if len(current_elements) == 1:
         # If there's only one element
         elem = current_elements[0]
-        return ET.tostring(elem, encoding='unicode', method='xml').strip()
+        if len(elem) == 0:
+            # If it's a leaf node, return its text content
+            return elem.text.strip() if elem.text else ''
+        else:
+            # If it has children, return its string representation
+            return ET.tostring(elem, encoding='unicode', method='xml').strip()
     else:
         # If there are multiple elements, return a list
         return [ET.tostring(elem, encoding='unicode', method='xml').strip() for elem in current_elements]
