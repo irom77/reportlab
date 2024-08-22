@@ -2,7 +2,8 @@ import xml.etree.ElementTree as ET
 
 def replace_xml_content(input_file, output_file, tags):
     # Parse the XML file
-    tree = ET.parse(input_file)
+    parser = ET.XMLParser(remove_blank_text=True)
+    tree = ET.parse(input_file, parser)
     root = tree.getroot()
 
     # Function to recursively process elements
@@ -15,8 +16,7 @@ def replace_xml_content(input_file, output_file, tags):
                 element.text = None
             else:
                 # Replace the content
-                for child in list(element):
-                    element.remove(child)
+                element.clear()
                 element.text = str(tags[tag])
         for child in list(element):
             process_element(child)
@@ -25,7 +25,15 @@ def replace_xml_content(input_file, output_file, tags):
     process_element(root)
 
     # Write the modified XML to the output file
-    tree.write(output_file, encoding='utf-8', xml_declaration=True, short_empty_elements=False)
+    tree.write(output_file, encoding='utf-8', xml_declaration=True, method='xml', short_empty_elements=False)
+    
+    # Pretty print the output
+    xml_string = ET.tostring(root, encoding='unicode', method='xml')
+    from xml.dom import minidom
+    pretty_xml = minidom.parseString(xml_string).toprettyxml(indent="  ")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + pretty_xml[pretty_xml.index('\n')+1:])
+
     return tree
 
 def get_para_by_tag(file_path, tag):
