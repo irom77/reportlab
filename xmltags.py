@@ -19,7 +19,7 @@ def replace_xml_content(input_file, output_file, tags):
                 element[:] = []  # Remove all children
             else:
                 # Replace the content
-                element.text = str(tags[tag])
+                element.text = str(tags[tag]).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
                 element[:] = []  # Remove all children
         for child in list(element):
             process_element(child)
@@ -37,7 +37,7 @@ def replace_xml_content(input_file, output_file, tags):
         if elem.text or len(elem):
             result += '>'
             if elem.text:
-                result += elem.text
+                result += elem.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
             for child in elem:
                 result += element_to_string(child, level + 1)
             result += f'</{elem.tag}>'
@@ -52,7 +52,7 @@ def replace_xml_content(input_file, output_file, tags):
     # Write the modified content to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(modified_content.strip() + '\n')
+        f.write(modified_content)
 
     return tree
 
