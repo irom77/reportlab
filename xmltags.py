@@ -27,18 +27,31 @@ def replace_xml_content(input_file, output_file, tags):
     # Process the root and all its children
     process_element(root)
 
-    # Convert the modified tree to a string
-    modified_content = ET.tostring(root, encoding='unicode', method='xml')
+    # Convert the modified tree to a string, preserving original formatting
+    def element_to_string(elem, level=0):
+        indent = '  ' * level
+        result = f'{indent}<{elem.tag}'
+        if elem.attrib:
+            attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
+            result += f' {attributes}'
+        if elem.text or len(elem):
+            result += '>'
+            if elem.text and elem.text.strip():
+                result += f'\n{indent}  {elem.text.strip()}\n'
+            for child in elem:
+                result += element_to_string(child, level + 1)
+            result += f'{indent}</{elem.tag}>'
+        else:
+            result += '/>'
+        result += '\n'
+        return result
 
-    # Replace the content between root tags in the original file
-    start = content.index('<root')
-    end = content.rindex('</root>') + len('</root>')
-    new_content = content[:start] + modified_content + content[end:]
+    modified_content = element_to_string(root)
 
     # Write the modified content to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(new_content[new_content.index('<root'):])
+        f.write(modified_content)
 
     return tree
 
