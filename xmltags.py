@@ -1,4 +1,8 @@
 import xml.etree.ElementTree as ET
+import html
+
+def escape_xml_content(text):
+    return html.escape(text, quote=False)
 
 def replace_xml_content(input_file, output_file, tags):
     # Read the original file to preserve formatting
@@ -18,8 +22,8 @@ def replace_xml_content(input_file, output_file, tags):
                 element.text = None
                 element[:] = []  # Remove all children
             else:
-                # Replace the content
-                element.text = str(tags[tag]).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                # Replace the content without escaping
+                element.text = str(tags[tag])
                 element[:] = []  # Remove all children
         for child in list(element):
             process_element(child)
@@ -37,7 +41,7 @@ def replace_xml_content(input_file, output_file, tags):
         if elem.text or len(elem):
             result += '>'
             if elem.text:
-                result += elem.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                result += escape_xml_content(elem.text)
             for child in elem:
                 result += element_to_string(child, level + 1)
             result += f'</{elem.tag}>'
