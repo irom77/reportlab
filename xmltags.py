@@ -11,27 +11,20 @@ def replace_xml_content(input_file, output_file, tags):
         if tag in tags:
             if tags[tag] is None:
                 # Preserve the tag but clear its content
-                element.clear()
                 element.text = None
+                element.clear()
             else:
                 # Replace the content
-                element.clear()
                 element.text = str(tags[tag])
+                element[:] = []  # Remove all children
         for child in list(element):
             process_element(child)
 
     # Process the root and all its children
     process_element(root)
 
-    # Pretty print the output
-    from xml.dom import minidom
-    xml_string = ET.tostring(root, encoding='unicode', method='xml')
-    pretty_xml = minidom.parseString(xml_string).toprettyxml(indent="  ")
-    
-    # Write the modified XML to the output file
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(pretty_xml[pretty_xml.index('\n')+1:])
+    # Write the modified XML to the output file, preserving original formatting
+    tree.write(output_file, encoding='utf-8', xml_declaration=True)
 
     return tree
 
