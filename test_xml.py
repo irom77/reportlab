@@ -8,10 +8,10 @@ from xml.etree import ElementTree as ET
 #       <para><tag1></tag1>qwerty</para>
 #       <para><tag4>qaz</tag4>asdfgh</para>
 #       <tag2>Original content 2</tag2>
-#       <sect><tag3>Original content 3</tag3><sect>
+#       <sect><tag3>Original content 3</tag3></sect>
 #       <tag3>Original content 3</tag3>
 #       <tag5>Semicolon, inside</tag5>
-#       <sect><tag5>Semicolon, inside</tag5><sect>
+#       <sect><tag5>Semicolon, inside</tag5></sect>
 # </content>    
 # </root>
 
