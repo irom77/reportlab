@@ -41,14 +41,16 @@ def replace_xml_content(input_file, output_file, tags):
         if elem.text or len(elem):
             result += '>'
             if elem.text:
-                result += escape_xml_content(elem.text)
-            for child in elem:
-                result += element_to_string(child, level + 1)
+                result += escape_xml_content(elem.text.strip())
+            if len(elem):
+                result += '\n'
+                for child in elem:
+                    result += element_to_string(child, level + 1)
+                result += indent
             result += f'</{elem.tag}>'
         else:
             result += '/>'
-        if level > 0:
-            result = '\n' + result
+        result += '\n'
         return result
 
     modified_content = element_to_string(root)
