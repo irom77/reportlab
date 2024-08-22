@@ -31,6 +31,8 @@ def test_replace_xml_content():
     assert root.find(".//tag2") is not None, "<tag2> element not found"
     assert root.find(".//tag2").text == "new tag2 <tag>qwerty qaz<tag/>", "Content of <tag2> does not match"
     assert root.find(".//tag1") is not None, "<tag1> element not found"
+    assert root.find(".//tag4") is not None, "<tag4> element not found"
+    assert root.find(".//tag4").text == "new tag4", "Content of <tag4> does not match"
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
 # <root>

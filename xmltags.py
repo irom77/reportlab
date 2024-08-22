@@ -46,8 +46,10 @@ def get_para_by_tag(file_path, tag):
             # If it's a leaf node, return its text content or string representation
             return elem.text.strip() if elem.text and elem.text.strip() else ET.tostring(elem, encoding='unicode').strip()
         else:
-            # If it has children, return string representations of all child elements
-            return ''.join([ET.tostring(child, encoding='unicode').strip() for child in elem])
+            # If it has children, return both text and string representations of all child elements
+            result = elem.text.strip() if elem.text else ''
+            result += ''.join([ET.tostring(child, encoding='unicode').strip() for child in elem])
+            return result
     else:
         # If there are multiple elements, return a list
         result = []
@@ -56,6 +58,8 @@ def get_para_by_tag(file_path, tag):
                 # If it's a leaf node, add its text content or string representation
                 result.append(elem.text.strip() if elem.text and elem.text.strip() else ET.tostring(elem, encoding='unicode').strip())
             else:
-                # If it has children, add string representations of all child elements
-                result.extend([ET.tostring(child, encoding='unicode').strip() for child in elem])
+                # If it has children, add both text and string representations of all child elements
+                elem_result = elem.text.strip() if elem.text else ''
+                elem_result += ''.join([ET.tostring(child, encoding='unicode').strip() for child in elem])
+                result.append(elem_result)
         return result
