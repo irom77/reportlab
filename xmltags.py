@@ -118,6 +118,10 @@ def replace_xml_fstr(input_file, output_file, vars):
     process_element(root)
 
     # Write the modified content to the output file
-    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    with open(output_file, 'w', encoding='utf-8') as f:
+        # Preserve the XML declaration
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        # Write the rest of the XML content
+        f.write(ET.tostring(root, encoding='unicode', method='xml'))
 
     return tree
