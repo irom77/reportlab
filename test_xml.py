@@ -67,7 +67,7 @@ def test_replace_xml_fstr():
     assert 'new var4' in ET.tostring(content, encoding='unicode'), "{var4} should be replaced with 'new var4'"
     
     # Compare input and output files
-    with open('tests/input_fstr.xml', 'r') as input_file, open('tests/output_fstr.xml', 'r') as output_file:
+    with open('tests/expected_fstr.xml', 'r') as input_file, open('tests/output_fstr.xml', 'r') as output_file:
         input_lines = input_file.readlines()
         output_lines = output_file.readlines()
         

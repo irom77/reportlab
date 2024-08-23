@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <content>
+    <para>{var1}</para>
+    <para>{var2}asd,fgh</para>
+    <tag1>Original content 1</tag1>
+    <sect>{var3}</sect>
+    <sect>{var4} </sect>
+  </content>
+</root>
