@@ -120,8 +120,10 @@ def replace_xml_fstr(input_file, output_file, vars):
 
     # Convert the modified tree to a string, preserving original formatting
     def element_to_string(elem, level=0):
-        indent = '  ' * level
-        result = f'{indent}<{elem.tag}'
+        result = ''
+        if level > 0:
+            result = '  ' * level
+        result += f'<{elem.tag}'
         if elem.attrib:
             attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
             result += f' {attributes}'
@@ -133,11 +135,15 @@ def replace_xml_fstr(input_file, output_file, vars):
                 result += '\n'
                 for child in elem:
                     result += element_to_string(child, level + 1)
-                result += indent
+                if level > 0:
+                    result += '  ' * level
             result += f'</{elem.tag}>'
         else:
             result += '/>'
-        result += '\n'
+        if level > 0 or elem.tail:
+            result += '\n'
+        if elem.tail:
+            result += escape_xml_content(elem.tail)
         return result
 
     modified_content = element_to_string(root)
