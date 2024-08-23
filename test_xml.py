@@ -54,11 +54,11 @@ def test_replace_xml_fstr():
     content = root.find('.//content')
     assert content is not None, "Content element not found"
     
-    # Check if {var1} is removed
-    assert '{var1}' not in ET.tostring(content, encoding='unicode'), "{var1} should be removed"
+    # Check if {var1} is not replaced (because its value is None)
+    assert '{var1}' in ET.tostring(content, encoding='unicode'), "{var1} should not be replaced"
     
     # Check if {var2} is replaced
-    assert 'new var2' in ET.tostring(content, encoding='unicode'), "{var2} should be replaced with 'new var2'"
+    assert 'new var2 ' in ET.tostring(content, encoding='unicode'), "{var2} should be replaced with 'new var2 '"
     
     # Check if {var3} is not replaced
     assert '{var3}' in ET.tostring(content, encoding='unicode'), "{var3} should not be replaced"
