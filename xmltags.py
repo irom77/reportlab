@@ -101,16 +101,27 @@ def replace_xml_fstr(input_file, output_file, vars):
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Function to recursively process elements
+    # Function to recursively process elements and their attributes
     def process_element(element):
+        # Replace variables in element text
         if element.text:
             for var, value in vars.items():
                 if value is not None:
                     element.text = element.text.replace(f'{{{var}}}', str(value))
+        
+        # Replace variables in element tail
         if element.tail:
             for var, value in vars.items():
                 if value is not None:
                     element.tail = element.tail.replace(f'{{{var}}}', str(value))
+        
+        # Replace variables in attributes
+        for attr, attr_value in element.attrib.items():
+            for var, value in vars.items():
+                if value is not None:
+                    element.attrib[attr] = attr_value.replace(f'{{{var}}}', str(value))
+        
+        # Process child elements
         for child in element:
             process_element(child)
 
@@ -122,10 +133,6 @@ def replace_xml_fstr(input_file, output_file, vars):
     process_element(root)
 
     # Write the modified content to the output file
-    with open(output_file, 'w', encoding='utf-8') as f:
-        # Preserve the XML declaration
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        # Write the rest of the XML content
-        f.write(ET.tostring(root, encoding='unicode', method='xml'))
+    tree.write(output_file, encoding='utf-8', xml_declaration=True)
 
     return tree
