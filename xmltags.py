@@ -107,6 +107,10 @@ def replace_xml_fstr(input_file, output_file, vars):
             for var, value in vars.items():
                 if value is not None:
                     element.text = element.text.replace(f'{{{var}}}', str(value))
+        if element.tail:
+            for var, value in vars.items():
+                if value is not None:
+                    element.tail = element.tail.replace(f'{{{var}}}', str(value))
         for child in element:
             process_element(child)
 
