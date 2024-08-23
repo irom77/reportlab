@@ -95,3 +95,59 @@ def get_para_by_tag(file_path, tag):
     else:
         # If there are multiple elements, return a list
         return [ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False).strip() for elem in current_elements]
+
+def replace_xml_fstr(input_file, output_file, vars):
+    # Read the original file to preserve formatting
+    with open(input_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Parse the XML file
+    tree = ET.parse(input_file)
+    root = tree.getroot()
+
+    # Function to recursively process elements
+    def process_element(element):
+        if element.text:
+            for var, value in vars.items():
+                if value is not None:
+                    element.text = element.text.replace(f'{{{var}}}', str(value))
+                else:
+                    element.text = element.text.replace(f'{{{var}}}', '')
+        for child in list(element):
+            process_element(child)
+
+    # Process the root and all its children
+    process_element(root)
+
+    # Convert the modified tree to a string, preserving original formatting
+    def element_to_string(elem, level=0):
+        indent = '  ' * level
+        result = f'{indent}<{elem.tag}'
+        if elem.attrib:
+            attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
+            result += f' {attributes}'
+        if elem.text or len(elem):
+            result += '>'
+            if elem.text:
+                result += escape_xml_content(elem.text)
+            if len(elem):
+                result += '\n'
+                for child in elem:
+                    result += element_to_string(child, level + 1)
+                result += indent
+            result += f'</{elem.tag}>'
+        else:
+            result += '/>'
+        result += '\n'
+        return result
+
+    modified_content = element_to_string(root)
+
+    # Write the modified content to the output file
+    with open(output_file, 'w', encoding='utf-8') as f:
+        # Preserve the XML declaration
+        xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f.write(xml_declaration)
+        f.write(modified_content.strip())
+
+    return tree
