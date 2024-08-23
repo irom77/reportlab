@@ -14,7 +14,6 @@ from xml.etree import ElementTree as ET
 #     <sect><tag5>Semicolon, inside</tag5></sect>
 #   </content>
 # </root>
-
 def test_replace_xml_content():
     tags1={
         'tag1': None,
@@ -36,6 +35,15 @@ def test_replace_xml_content():
     assert root.find(".//tag4") is not None, "<tag4> element not found"
     assert root.find(".//tag4").text == "new tag4", "Content of <tag4> does not match"
     assert root.find(".//para/tag4").text == "new tag4", "Content of <para><tag4> does not match"
+
+def test_replace_xml_fstr():
+    vars={
+        'var1': None,
+        'var2': 'new var2 ',
+        # 'var3': 'new var3',
+        'var4': 'new var4',
+    }
+
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
 # <root>
