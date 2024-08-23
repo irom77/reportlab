@@ -1,4 +1,4 @@
-from  xmltags import replace_xml_content, get_para_by_tag
+from  xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr
 from xml.etree import ElementTree as ET
 
 # input.xml
@@ -44,7 +44,7 @@ def test_replace_xml_fstr():
         'var4': 'new var4',
     }
     
-    replace_xml_fstr('tests/input.xml', 'tests/output_fstr.xml', vars)
+    replace_xml_fstr('tests/input_fstr.xml', 'tests/output_fstr.xml', vars)
     
     # Parse the output XML
     tree = ET.parse('tests/output_fstr.xml')
