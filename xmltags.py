@@ -132,9 +132,33 @@ def replace_xml_fstr(input_file, output_file, vars):
     # Process the root and all its children
     process_element(root)
 
+    # Custom function to convert element tree to string
+    def element_to_string(elem, level=0):
+        indent = '  ' * level
+        result = f'{indent}<{elem.tag}'
+        if elem.attrib:
+            attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
+            result += f' {attributes}'
+        if elem.text or len(elem):
+            result += '>'
+            if elem.text:
+                result += elem.text
+            if len(elem):
+                result += '\n'
+                for child in elem:
+                    result += element_to_string(child, level + 1)
+                result += indent
+            result += f'</{elem.tag}>'
+        else:
+            result += '></{elem.tag}>'  # Always use full closing tag
+        if elem.tail:
+            result += elem.tail
+        result += '\n'
+        return result
+
     # Write the modified content to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(ET.tostring(root, encoding='unicode', method='xml'))
+        f.write(element_to_string(root))
 
     return tree
