@@ -144,22 +144,20 @@ def replace_xml_fstr(input_file, output_file, vars):
             result += '>'
             if elem.text:
                 result += html.escape(elem.text)
+            for child in elem:
+                result += '\n' + element_to_string(child, level + 1)
             if len(elem):
-                result += '\n'
-                for child in elem:
-                    result += element_to_string(child, level + 1)
-                result += indent
+                result += '\n' + indent
             result += f'</{elem.tag}>'
         else:
-            result += '/>'  # Use self-closing tag for empty elements
+            result += '></{elem.tag}>'  # Use full closing tag for empty elements
         if elem.tail:
             result += html.escape(elem.tail)
-        result += '\n'
         return result
 
     # Write the modified content to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write(element_to_string(root))
+        f.write(element_to_string(root).rstrip() + '\n')
 
     return tree
