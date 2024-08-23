@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import html
+import html
 
 def escape_xml_content(text):
     return html.escape(text, quote=False)
@@ -142,7 +143,7 @@ def replace_xml_fstr(input_file, output_file, vars):
         if elem.text or len(elem):
             result += '>'
             if elem.text:
-                result += elem.text
+                result += html.escape(elem.text)
             if len(elem):
                 result += '\n'
                 for child in elem:
@@ -150,9 +151,9 @@ def replace_xml_fstr(input_file, output_file, vars):
                 result += indent
             result += f'</{elem.tag}>'
         else:
-            result += '></{elem.tag}>'  # Always use full closing tag
+            result += '/>'  # Use self-closing tag for empty elements
         if elem.tail:
-            result += elem.tail
+            result += html.escape(elem.tail)
         result += '\n'
         return result
 
