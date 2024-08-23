@@ -65,6 +65,17 @@ def test_replace_xml_fstr():
     
     # Check if {var4} is replaced
     assert 'new var4' in ET.tostring(content, encoding='unicode'), "{var4} should be replaced with 'new var4'"
+    
+    # Compare input and output files
+    with open('tests/input_fstr.xml', 'r') as input_file, open('tests/output_fstr.xml', 'r') as output_file:
+        input_lines = input_file.readlines()
+        output_lines = output_file.readlines()
+        
+        assert len(input_lines) == len(output_lines), "Input and output files have different number of lines"
+        
+        for i, (input_line, output_line) in enumerate(zip(input_lines, output_lines)):
+            if input_line.strip() != output_line.strip():
+                assert vars.get(input_line.strip('{}.')) is not None, f"Unexpected difference in line {i+1}"
 
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
