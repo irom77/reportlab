@@ -184,6 +184,29 @@ def get_para_by_tag(file_path, tag):
         result.append(f'</{elem.tag}>')
         return ''.join(result)
 
+    def get_para_by_tag(file_path, tag):
+        tree = ET.parse(file_path)
+        root = tree.getroot()
+
+        tag_path = tag.split('.')
+        current_elements = [root]
+        for t in tag_path[1:]:
+            next_elements = []
+            for elem in current_elements:
+                next_elements.extend(elem.findall(t))
+            if not next_elements:
+                return None
+            current_elements = next_elements
+
+        if len(current_elements) == 1:
+            elem = current_elements[0]
+            if len(elem) == 0 and not elem.attrib:
+                return elem.text.strip() if elem.text else ''
+            else:
+                return element_to_string(elem)
+        else:
+            return [element_to_string(elem) for elem in current_elements]
+
     if len(current_elements) == 1:
         elem = current_elements[0]
         if len(elem) == 0 and not elem.attrib:
