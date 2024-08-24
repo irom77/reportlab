@@ -349,10 +349,13 @@ def get_xml_by_tag(file_path, tag):
         if elem.text:
             parts.append(elem.text)
 
+        for item in elem.itertext():
+            if item != elem.text:
+                parts.append(item)
+
         for child in elem:
-            parts.append(element_to_string(child))
-            if child.tail:
-                parts.append(child.tail)
+            child_str = element_to_string(child)
+            parts.append(child_str)
 
         parts.append(f'</{elem.tag}>')
         return ''.join(parts)

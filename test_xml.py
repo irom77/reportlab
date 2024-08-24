@@ -168,6 +168,6 @@ def test_get_xml_by_tag():
     result=get_xml_by_tag('tests/input.xml','root.content.tag5')
     assert result == 'Semicolon, inside', "root.content.tag5 element not found"
     result=get_xml_by_tag('tests/input.xml','root.content.para')
-    assert result == ['<para>qwerty<tag1></tag1></para>', '<para>asdfgh<tag4>qaz</tag4></para>']
+    assert result == ['<para><tag1></tag1>qwerty</para>', '<para><tag4>qaz</tag4>asdfgh</para>']
     result=get_xml_by_tag('tests/input.xml','root.content.sect')
     assert result == ['<sect><tag3>Original content 3</tag3></sect>', '<sect><tag5><bullet>&bull;</bullet>Semicolon, inside</tag5></sect>']
