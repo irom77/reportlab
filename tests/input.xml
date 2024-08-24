@@ -7,6 +7,6 @@
     <sect><tag3>Original content 3</tag3></sect>
     <tag3>Original content 3</tag3>
     <tag5>Semicolon, inside</tag5>
-    <sect><tag5>Semicolon, inside</tag5></sect>
+    <sect><tag5><bullet>&bull;</bullet>Semicolon, inside</tag5></sect>
   </content>
 </root>
