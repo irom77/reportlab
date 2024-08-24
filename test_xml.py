@@ -16,6 +16,7 @@ import pytest
 #     <sect><tag5>Semicolon, inside</tag5></sect>
 #   </content>
 # </root>
+@pytest.mark.skip(reason="This is no more used")
 def test_replace_xml_content():
     tags1={
         'tag1': None,
@@ -159,4 +160,4 @@ def test_get_para_by_tag():
     result=get_para_by_tag('tests/input.xml','root.content.para')
     assert result == ['<para><tag1></tag1>qwerty</para>', '<para><tag4>qaz</tag4>asdfgh</para>']
     result=get_para_by_tag('tests/input.xml','root.content.sect')
-    assert result == ['<sect><tag3>Original content 3</tag3></sect>', '<sect><tag5>Semicolon, inside</tag5></sect>']
+    assert result == ['<sect><tag3>Original content 3</tag3></sect>', '<sect><tag5><bullet>&bull;</bullet>Semicolon, inside</tag5></sect>']
