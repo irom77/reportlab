@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import html
 import re
+import yaml
 
 def escape_xml_content(text):
     return html.escape(text, quote=False)
@@ -64,6 +65,30 @@ def replace_xml_content(input_file, output_file, tags):
         f.write(modified_content.strip())
 
     return tree
+
+def create_conf(input_file, config_file):
+    # Parse the XML file
+    tree = ET.parse(input_file)
+    root = tree.getroot()
+
+    # Function to recursively process XML elements
+    def process_element(element):
+        result = {}
+        for child in element:
+            if len(child) == 0:
+                # Leaf node
+                result[child.tag] = child.text.strip() if child.text else ''
+            else:
+                # Non-leaf node
+                result[child.tag] = process_element(child)
+        return result
+
+    # Process the root element
+    config_data = {root.tag: process_element(root)}
+
+    # Write the config data to YAML file
+    with open(config_file, 'w', encoding='utf-8') as f:
+        yaml.dump(config_data, f, default_flow_style=False)
 
 def replace_fstr(input_file, output_file, vars):
     with open(input_file, 'r', encoding='utf-8') as f:

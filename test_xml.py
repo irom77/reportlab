@@ -1,5 +1,6 @@
-from  xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr
+from xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr, create_conf
 from xml.etree import ElementTree as ET
+import yaml
 
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
@@ -122,6 +123,25 @@ def test_replace_fstr():
         expected_content = expected_file.read()
     
     assert output_content == expected_content, "The generated output_fstr.xml does not match expected_fstr.xml"
+
+def test_create_conf():
+    input_file = 'tests/config_input.xml'
+    config_file = 'tests/config_output.yml'
+    expected_file = 'tests/config_expected.yml'
+
+    # Create the config file
+    create_conf(input_file, config_file)
+
+    # Read the generated config file
+    with open(config_file, 'r') as f:
+        generated_config = yaml.safe_load(f)
+
+    # Read the expected config file
+    with open(expected_file, 'r') as f:
+        expected_config = yaml.safe_load(f)
+
+    # Compare the generated config with the expected config
+    assert generated_config == expected_config, "The generated config file does not match the expected config file"
 
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
