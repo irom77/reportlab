@@ -11,3 +11,8 @@ vars = {
         # 'var3': 'new var3',
         'var4': 'new var4',
     }
+
+- Add python function `create_conf(input_file, config_file)` to `xmltags.py` which will read XML  file 
+`input_file` and create file `config_file` of type YML. Direct children tags of <root> should be top-level keys in YML file, and text in curly braces should be variables. Add function `test_create_conf()` to test_xml.py which will assert if function `create_conf(input_file, config_file)` passes with file `input_file` of  `tests\config_input.xml` and  file `confif_file`of  `tests\config_expected.yml` as inputs
+
+    

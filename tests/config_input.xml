@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+     <figure1>
+        <image src="images/Figure1.PNG" alt="qaz"/>
+        <para>{var1}, qwerty,
+            asdfg {var2} uiop {var3} jkl.  
+            qazwsx.</para>
+    </figure1>
+    <figure2>
+        <image src="images/Figure2.PNG" alt="wsx"/>
+        <para>{var4}, qwerty,
+            qazwsx.</para>
+    </figure2>
+</root>
