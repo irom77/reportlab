@@ -107,6 +107,22 @@ def test2_replace_xml_content():
     
     assert output_content == expected_content, "The generated _output.xml does not match _expected_output.xml"
 
+def test_replace_fstr():
+    from xmltags import replace_fstr
+    
+    vars = {
+        'var2': 'new var2 ',
+        'var4': 'new var4',
+    }
+    
+    replace_fstr('tests/input_fstr.xml', 'tests/output_fstr.xml', vars)
+    
+    with open('tests/output_fstr.xml', 'r') as output_file, open('tests/expected_fstr.xml', 'r') as expected_file:
+        output_content = output_file.read()
+        expected_content = expected_file.read()
+    
+    assert output_content == expected_content, "The generated output_fstr.xml does not match expected_fstr.xml"
+
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
     assert result == 'qaz', "root.content.para.tag4 element not found"

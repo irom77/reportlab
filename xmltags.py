@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import html
-import html
+import re
 
 def escape_xml_content(text):
     return html.escape(text, quote=False)
@@ -64,6 +64,19 @@ def replace_xml_content(input_file, output_file, tags):
         f.write(modified_content.strip())
 
     return tree
+
+def replace_fstr(input_file, output_file, vars):
+    with open(input_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    def replace_var(match):
+        var_name = match.group(1)
+        return str(vars.get(var_name, match.group(0)))
+
+    modified_content = re.sub(r'\{(\w+)\}', replace_var, content)
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(modified_content)
 
 def get_para_by_tag(file_path, tag):
     # Parse the XML file
