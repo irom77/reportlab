@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
   <content>
-    <para>{var1}</para>
+    <para><bullet></bullet>{var1}</para>
     <para>new var2 asd,fgh</para>
     <tag1>Original content 1</tag1>
     <sect>{var3}</sect>
-    <sect>new var4 </sect>
+    <sect><bullet></bullet>new var4 </sect>
   </content>
 </root>
