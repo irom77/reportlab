@@ -73,18 +73,27 @@ def create_conf(input_file, config_file):
 
     # Function to recursively process XML elements
     def process_element(element):
-        result = {}
-        for child in element:
-            if len(child) == 0:
-                # Leaf node
-                result[child.tag] = child.text.strip() if child.text else ''
-            else:
-                # Non-leaf node
+        if len(element) == 0:
+            # Leaf node
+            return process_text(element.text.strip() if element.text else '')
+        else:
+            # Non-leaf node
+            result = {}
+            for child in element:
                 result[child.tag] = process_element(child)
-        return result
+            return result
+
+    # Function to process text and identify variables
+    def process_text(text):
+        variables = re.findall(r'\{([^}]+)\}', text)
+        if variables:
+            return {var: '' for var in variables}
+        return text
 
     # Process the root element
-    config_data = {root.tag: process_element(root)}
+    config_data = {}
+    for child in root:
+        config_data[child.tag] = process_element(child)
 
     # Write the config data to YAML file
     with open(config_file, 'w', encoding='utf-8') as f:

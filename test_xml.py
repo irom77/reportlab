@@ -128,6 +128,16 @@ def test_create_conf():
     # Compare the generated config with the expected config
     assert generated_config == expected_config, "The generated config file does not match the expected config file"
 
+    # Additional checks
+    assert 'root' not in generated_config, "Root should not be a top-level key in the YAML file"
+    
+    # Check if variables are correctly identified
+    for key, value in generated_config.items():
+        if isinstance(value, dict):
+            for subkey, subvalue in value.items():
+                if isinstance(subvalue, dict):
+                    assert all(v == '' for v in subvalue.values()), f"Variables in {key}.{subkey} should have empty string values"
+
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
     assert result == 'qaz', "root.content.para.tag4 element not found"
