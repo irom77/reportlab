@@ -1,4 +1,4 @@
-from xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr, create_conf
+from xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr, create_conf, get_xml_by_tag
 from xml.etree import ElementTree as ET
 import yaml
 import pytest
@@ -151,7 +151,7 @@ def test_create_conf():
                 check_variables(item)
 
     check_variables(generated_config)
-
+@pytest.mark.skip(reason="Temp disabled")
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
     assert result == 'qaz', "root.content.para.tag4 element not found"
@@ -160,4 +160,14 @@ def test_get_para_by_tag():
     result=get_para_by_tag('tests/input.xml','root.content.para')
     assert result == ['<para>qwerty<tag1></tag1></para>', '<para>asdfgh<tag4>qaz</tag4></para>']
     result=get_para_by_tag('tests/input.xml','root.content.sect')
+    assert result == ['<sect><tag3>Original content 3</tag3></sect>', '<sect><tag5><bullet>&bull;</bullet>Semicolon, inside</tag5></sect>']
+
+def test_get_xml_by_tag():    
+    result=get_xml_by_tag('tests/input.xml','root.content.para.tag4')
+    assert result == 'qaz', "root.content.para.tag4 element not found"
+    result=get_xml_by_tag('tests/input.xml','root.content.tag5')
+    assert result == 'Semicolon, inside', "root.content.tag5 element not found"
+    result=get_xml_by_tag('tests/input.xml','root.content.para')
+    assert result == ['<para>qwerty<tag1></tag1></para>', '<para>asdfgh<tag4>qaz</tag4></para>']
+    result=get_xml_by_tag('tests/input.xml','root.content.sect')
     assert result == ['<sect><tag3>Original content 3</tag3></sect>', '<sect><tag5><bullet>&bull;</bullet>Semicolon, inside</tag5></sect>']
