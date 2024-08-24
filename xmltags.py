@@ -142,16 +142,10 @@ def get_para_by_tag(file_path, tag):
 
         def data(self, data):
             if self.current is not None:
-                if len(self.current) > 0:
-                    if self.current[-1].tail is None:
-                        self.current[-1].tail = data
-                    else:
-                        self.current[-1].tail += data
+                if self.current.text is None:
+                    self.current.text = data
                 else:
-                    if self.current.text is None:
-                        self.current.text = data
-                    else:
-                        self.current.text += data
+                    self.current.text += data
 
     parser = XMLParser()
     p = ParserCreate()
@@ -173,19 +167,15 @@ def get_para_by_tag(file_path, tag):
         current_elements = next_elements
 
     def element_to_string(elem):
-        result = f'<{elem.tag}'
-        if elem.attrib:
-            attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
-            result += f' {attributes}'
-        result += '>'
+        parts = []
         if elem.text:
-            result += elem.text
+            parts.append(elem.text)
         for child in elem:
-            result += element_to_string(child)
+            parts.append(element_to_string(child))
             if child.tail:
-                result += child.tail
-        result += f'</{elem.tag}>'
-        return result
+                parts.append(child.tail)
+        content = ''.join(parts)
+        return f'<{elem.tag}>{content}</{elem.tag}>'
 
     if len(current_elements) == 1:
         elem = current_elements[0]
