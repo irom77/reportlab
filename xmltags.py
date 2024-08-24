@@ -167,22 +167,23 @@ def get_para_by_tag(file_path, tag):
         current_elements = next_elements
 
     def element_to_string(elem):
-        result = [f'<{elem.tag}']
+        parts = []
+        parts.append(f'<{elem.tag}')
         if elem.attrib:
             attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
-            result.append(f' {attributes}')
-        result.append('>')
+            parts.append(f' {attributes}')
+        parts.append('>')
     
         if elem.text:
-            result.append(elem.text)
+            parts.append(elem.text)
     
         for child in elem:
-            result.append(element_to_string(child))
+            parts.append(element_to_string(child))
             if child.tail:
-                result.append(child.tail)
+                parts.append(child.tail)
     
-        result.append(f'</{elem.tag}>')
-        return ''.join(result)
+        parts.append(f'</{elem.tag}>')
+        return ''.join(parts)
 
     def get_para_by_tag(file_path, tag):
         tree = ET.parse(file_path)
