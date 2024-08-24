@@ -173,15 +173,15 @@ def get_para_by_tag(file_path, tag):
             attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
             parts.append(f' {attributes}')
         parts.append('>')
-    
+
         if elem.text:
             parts.append(elem.text)
-    
+
         for child in elem:
             parts.append(element_to_string(child))
             if child.tail:
                 parts.append(child.tail)
-    
+
         parts.append(f'</{elem.tag}>')
         return ''.join(parts)
 
