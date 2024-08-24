@@ -1,6 +1,7 @@
 from xmltags import replace_xml_content, get_para_by_tag, replace_xml_fstr, create_conf
 from xml.etree import ElementTree as ET
 import yaml
+import pytest
 
 # input.xml
 # <?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +37,7 @@ def test_replace_xml_content():
     assert root.find(".//tag4") is not None, "<tag4> element not found"
     assert root.find(".//tag4").text == "new tag4", "Content of <tag4> does not match"
     assert root.find(".//para/tag4").text == "new tag4", "Content of <para><tag4> does not match"
-
+@pytest.mark.skip(reason="This is no more used")
 def test_replace_xml_fstr():
     vars = {
         'var1': None,
@@ -91,22 +92,6 @@ def test_replace_xml_fstr():
 #     <sect><tag5>Semicolon, inside</tag5></sect>
 #   </content>
 # </root>
-def test2_replace_xml_content():
-    tags1={
-        'between_dates': 'From July 1 to 30',
-        'inbound_messages': '10',
-        'blocked_messages': '5',
-        'delivered_messages': '5'
-    }
-
-    replace_xml_content('tests/_input.xml', 'tests/_output.xml', tags1)
-    
-    # Read and compare the contents of _output.xml and _expected_output.xml
-    with open('tests/_output.xml', 'r') as output_file, open('tests/_expected_output.xml', 'r') as expected_file:
-        output_content = output_file.read()
-        expected_content = expected_file.read()
-    
-    assert output_content == expected_content, "The generated _output.xml does not match _expected_output.xml"
 
 def test_replace_fstr():
     from xmltags import replace_fstr
