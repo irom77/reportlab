@@ -129,13 +129,6 @@ def get_para_by_tag(file_path, tag):
             if self.root is None:
                 self.root = elem
             if self.current is not None:
-                if self.current.text and self.current.text.strip():
-                    last = self.current[-1] if len(self.current) > 0 else None
-                    if last is not None and last.tail is None:
-                        last.tail = self.current.text
-                    else:
-                        elem.tail = self.current.text
-                    self.current.text = None
                 self.current.append(elem)
             self.stack.append(elem)
             self.current = elem
@@ -149,10 +142,16 @@ def get_para_by_tag(file_path, tag):
 
         def data(self, data):
             if self.current is not None:
-                if self.current.text is None:
-                    self.current.text = data
+                if len(self.current) > 0:
+                    if self.current[-1].tail is None:
+                        self.current[-1].tail = data
+                    else:
+                        self.current[-1].tail += data
                 else:
-                    self.current.text += data
+                    if self.current.text is None:
+                        self.current.text = data
+                    else:
+                        self.current.text += data
 
     parser = XMLParser()
     p = ParserCreate()
