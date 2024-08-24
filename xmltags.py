@@ -118,7 +118,6 @@ def replace_fstr(input_file, output_file, vars):
         f.write(modified_content)
 
 def get_para_by_tag(file_path, tag):
-    # Custom parser to preserve entities
     class XMLParser:
         def __init__(self):
             self.root = None
@@ -130,6 +129,13 @@ def get_para_by_tag(file_path, tag):
             if self.root is None:
                 self.root = elem
             if self.current is not None:
+                if self.current.text and self.current.text.strip():
+                    last = self.current[-1] if len(self.current) > 0 else None
+                    if last is not None and last.tail is None:
+                        last.tail = self.current.text
+                    else:
+                        elem.tail = self.current.text
+                    self.current.text = None
                 self.current.append(elem)
             self.stack.append(elem)
             self.current = elem
@@ -148,7 +154,6 @@ def get_para_by_tag(file_path, tag):
                 else:
                     self.current.text += data
 
-    # Parse the XML file
     parser = XMLParser()
     p = ParserCreate()
     p.StartElementHandler = parser.start
@@ -158,32 +163,39 @@ def get_para_by_tag(file_path, tag):
         p.ParseFile(file)
     root = parser.root
 
-    # Split the tag path
     tag_path = tag.split('.')
-
-    # Navigate through the XML tree
     current_elements = [root]
-    for t in tag_path[1:]:  # Skip 'root' as we start from root
+    for t in tag_path[1:]:
         next_elements = []
         for elem in current_elements:
             next_elements.extend(elem.findall(t))
         if not next_elements:
-            return None  # Tag not found
+            return None
         current_elements = next_elements
 
-    # Process the final elements
+    def element_to_string(elem):
+        result = f'<{elem.tag}'
+        if elem.attrib:
+            attributes = ' '.join(f'{k}="{v}"' for k, v in elem.attrib.items())
+            result += f' {attributes}'
+        result += '>'
+        if elem.text:
+            result += elem.text
+        for child in elem:
+            result += element_to_string(child)
+            if child.tail:
+                result += child.tail
+        result += f'</{elem.tag}>'
+        return result
+
     if len(current_elements) == 1:
-        # If there's only one element
         elem = current_elements[0]
         if len(elem) == 0 and not elem.attrib:
-            # If it's a leaf node without attributes, return its text content
             return elem.text.strip() if elem.text else ''
         else:
-            # If it has children or attributes, return its string representation
-            return ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False, xml_declaration=False).strip()
+            return element_to_string(elem)
     else:
-        # If there are multiple elements, return a list
-        return [ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False, xml_declaration=False).strip() for elem in current_elements]
+        return [element_to_string(elem) for elem in current_elements]
 
 def replace_xml_fstr(input_file, output_file, vars):
     # Read the original file to preserve formatting
