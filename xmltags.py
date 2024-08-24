@@ -80,7 +80,11 @@ def create_conf(input_file, config_file):
             # Non-leaf node
             result = {}
             for child in element:
-                result[child.tag] = process_element(child)
+                child_result = process_element(child)
+                if isinstance(child_result, dict) and len(child_result) == 1 and child.tag in child_result:
+                    result[child.tag] = child_result[child.tag]
+                else:
+                    result[child.tag] = child_result
             return result
 
     # Function to process text and identify variables
@@ -90,7 +94,7 @@ def create_conf(input_file, config_file):
             return {var: '' for var in variables}
         return text
 
-    # Process the root element
+    # Process only direct children of root
     config_data = {}
     for child in root:
         config_data[child.tag] = process_element(child)

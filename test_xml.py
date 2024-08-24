@@ -131,12 +131,25 @@ def test_create_conf():
     # Additional checks
     assert 'root' not in generated_config, "Root should not be a top-level key in the YAML file"
     
+    # Check if only direct children of root are top-level keys
+    tree = ET.parse(input_file)
+    root = tree.getroot()
+    direct_children = set(child.tag for child in root)
+    assert set(generated_config.keys()) == direct_children, "Only direct children of root should be top-level keys"
+
     # Check if variables are correctly identified
-    for key, value in generated_config.items():
-        if isinstance(value, dict):
-            for subkey, subvalue in value.items():
-                if isinstance(subvalue, dict):
-                    assert all(v == '' for v in subvalue.values()), f"Variables in {key}.{subkey} should have empty string values"
+    def check_variables(data):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if isinstance(value, dict) and all(v == '' for v in value.values()):
+                    # This is a variable dictionary
+                    continue
+                check_variables(value)
+        elif isinstance(data, list):
+            for item in data:
+                check_variables(item)
+
+    check_variables(generated_config)
 
 def test_get_para_by_tag():    
     result=get_para_by_tag('tests/input.xml','root.content.para.tag4')
