@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import html
 import re
 import yaml
+from xml.parsers.expat import ParserCreate
 
 def escape_xml_content(text):
     return html.escape(text, quote=False)
@@ -117,9 +118,45 @@ def replace_fstr(input_file, output_file, vars):
         f.write(modified_content)
 
 def get_para_by_tag(file_path, tag):
+    # Custom parser to preserve entities
+    class XMLParser:
+        def __init__(self):
+            self.root = None
+            self.current = None
+            self.stack = []
+
+        def start(self, tag, attrs):
+            elem = ET.Element(tag, attrs)
+            if self.root is None:
+                self.root = elem
+            if self.current is not None:
+                self.current.append(elem)
+            self.stack.append(elem)
+            self.current = elem
+
+        def end(self, tag):
+            self.stack.pop()
+            if self.stack:
+                self.current = self.stack[-1]
+            else:
+                self.current = None
+
+        def data(self, data):
+            if self.current is not None:
+                if self.current.text is None:
+                    self.current.text = data
+                else:
+                    self.current.text += data
+
     # Parse the XML file
-    tree = ET.parse(file_path)
-    root = tree.getroot()
+    parser = XMLParser()
+    p = ParserCreate()
+    p.StartElementHandler = parser.start
+    p.EndElementHandler = parser.end
+    p.CharacterDataHandler = parser.data
+    with open(file_path, 'rb') as file:
+        p.ParseFile(file)
+    root = parser.root
 
     # Split the tag path
     tag_path = tag.split('.')
