@@ -143,10 +143,10 @@ def get_para_by_tag(file_path, tag):
             return elem.text.strip() if elem.text else ''
         else:
             # If it has children or attributes, return its string representation
-            return ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False).strip()
+            return ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False, xml_declaration=False).strip()
     else:
         # If there are multiple elements, return a list
-        return [ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False).strip() for elem in current_elements]
+        return [ET.tostring(elem, encoding='unicode', method='xml', short_empty_elements=False, xml_declaration=False).strip() for elem in current_elements]
 
 def replace_xml_fstr(input_file, output_file, vars):
     # Read the original file to preserve formatting
