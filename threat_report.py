@@ -23,4 +23,4 @@ if __name__ == "__main__":
     client = ProofpointAPIClient()
     # result=client.messages_blocked()
     # print(result)
-    print(between_dates(conf.month))
+    print(between_dates(conf.report.month))
