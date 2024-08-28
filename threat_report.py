@@ -28,6 +28,11 @@ if __name__ == "__main__":
     
     client = ProofpointAPIClient(conf)
     inbound_count = client.inbound_messages()
-    print(f"Total inbound messages: {inbound_count}")
+    print(f"Total inbound messages for {conf.report.month}: {inbound_count}")
+    
+    # Update the configuration with the inbound count
+    conf.figure1.inbound_messages = inbound_count
+    OmegaConf.save(conf, 'configs/_threat_report.yml')
+    
     # result=client.messages_blocked()
     # print(result)

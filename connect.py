@@ -29,12 +29,13 @@ class ProofpointAPIClient:
         month = datetime.strptime(self.conf.report.month, '%B').month
         _, last_day = calendar.monthrange(year, month)
         
-        start_date = f"{year}-{month:02d}-01T00:00:00Z"
-        end_date = f"{year}-{month:02d}-{last_day:02d}T23:59:59Z"
+        # Calculate the number of seconds in the month
+        start_date = datetime(year, month, 1)
+        end_date = datetime(year, month, last_day, 23, 59, 59)
+        seconds_in_month = int((end_date - start_date).total_seconds())
         
         params = {
-            'from': start_date,
-            'to': end_date,
+            'sinceSeconds': seconds_in_month,
             'format': 'json'
         }
         
@@ -48,7 +49,7 @@ class ProofpointAPIClient:
         
         if response.status_code == 200:
             data = response.json()
-            return data.get('totalMessages', 0)
+            return data.get('messagesDelivered', 0)
         else:
             print(f"Error: {response.status_code} - {response.text}")
             return 0
