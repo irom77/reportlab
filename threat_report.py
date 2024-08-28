@@ -26,6 +26,8 @@ if __name__ == "__main__":
     conf.figure1.between_dates = date_range
     OmegaConf.save(conf, 'configs/_threat_report.yml')
     
-    client = ProofpointAPIClient()
+    client = ProofpointAPIClient(conf)
+    inbound_count = client.inbound_messages()
+    print(f"Total inbound messages: {inbound_count}")
     # result=client.messages_blocked()
     # print(result)
