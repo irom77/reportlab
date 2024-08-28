@@ -30,7 +30,7 @@ class ProofpointAPIClient:
         year = now.year
         month = report_month.month
 
-        # If the report month is in the future, use the previous year
+        # Adjust the year to get the most recent occurrence of the specified month
         if (year, month) > (now.year, now.month):
             year -= 1
 
@@ -39,13 +39,11 @@ class ProofpointAPIClient:
         start_date = datetime(year, month, 1)
         end_date = min(datetime(year, month, last_day, 23, 59, 59), now)
 
-        # If end_date is in the future, set it to now
-        if end_date > now:
-            end_date = now
+        # Ensure end_date is not in the future
+        end_date = min(end_date, now)
 
-        # Ensure start_date is not after end_date
-        if start_date > end_date:
-            start_date = end_date
+        # Ensure start_date is not after end_date (this should never happen now, but keeping as a safeguard)
+        start_date = min(start_date, end_date)
 
         seconds_since_start = max(0, int((end_date - start_date).total_seconds()))
         
@@ -54,6 +52,9 @@ class ProofpointAPIClient:
             'format': 'json'
         }
 
+        print(f"Debug: Current date and time: {now}")
+        print(f"Debug: Report month: {self.conf.report.month}")
+        print(f"Debug: Year used for calculation: {year}")
         print(f"Debug: API request - Start date: {start_date}, End date: {end_date}")
         print(f"Debug: API request - Seconds since start: {seconds_since_start}")
         
@@ -67,7 +68,9 @@ class ProofpointAPIClient:
         
         if response.status_code == 200:
             data = response.json()
-            return data.get('messagesDelivered', 0)
+            messages_delivered = data.get('messagesDelivered', 0)
+            print(f"Debug: Messages delivered: {messages_delivered}")
+            return messages_delivered
         else:
             print(f"Error: {response.status_code} - {response.text}")
             return 0
