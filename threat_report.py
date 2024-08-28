@@ -38,12 +38,16 @@ if __name__ == "__main__":
     _, last_day = calendar.monthrange(year, month)
     start_date = datetime(year, month, 1)
     end_date = min(datetime(year, month, last_day, 23, 59, 59), now)
-    print(f"Debug: Start date: {start_date}, End date: {end_date}")
-    print(f"Debug: Seconds since start: {int((end_date - start_date).total_seconds())}")
+    print(f"Debug: Calculated - Start date: {start_date}, End date: {end_date}")
+    print(f"Debug: Calculated - Seconds since start: {int((end_date - start_date).total_seconds())}")
     
     # Update the configuration with the inbound count
     conf.figure1.inbound_messages = inbound_count
     OmegaConf.save(conf, 'configs/_threat_report.yml')
+
+    print(f"\nDebug: Current date and time: {now}")
+    print(f"Debug: Report month: {conf.report.month}")
+    print(f"Debug: Year used for calculation: {year}")
     
     # result=client.messages_blocked()
     # print(result)

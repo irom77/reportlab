@@ -27,19 +27,35 @@ class ProofpointAPIClient:
     def inbound_messages(self):
         now = datetime.now()
         report_month = datetime.strptime(self.conf.report.month, '%B')
-        year = now.year if report_month.month <= now.month else now.year - 1
+        year = now.year
         month = report_month.month
+
+        # If the report month is in the future, use the previous year
+        if (year, month) > (now.year, now.month):
+            year -= 1
+
         _, last_day = calendar.monthrange(year, month)
         
-        # Calculate the number of seconds from the start of the month to now
         start_date = datetime(year, month, 1)
         end_date = min(datetime(year, month, last_day, 23, 59, 59), now)
-        seconds_since_start = int((end_date - start_date).total_seconds())
+
+        # If end_date is in the future, set it to now
+        if end_date > now:
+            end_date = now
+
+        # Ensure start_date is not after end_date
+        if start_date > end_date:
+            start_date = end_date
+
+        seconds_since_start = max(0, int((end_date - start_date).total_seconds()))
         
         params = {
             'sinceSeconds': seconds_since_start,
             'format': 'json'
         }
+
+        print(f"Debug: API request - Start date: {start_date}, End date: {end_date}")
+        print(f"Debug: API request - Seconds since start: {seconds_since_start}")
         
         response = requests.get(
             url=f"{self.base_url}/all",
