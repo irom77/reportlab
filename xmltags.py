@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import html
 import re
-import yaml
+import yaml # type: ignore
 from xml.parsers.expat import ParserCreate
 
 def escape_xml_content(text):

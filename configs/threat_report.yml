@@ -1,0 +1,26 @@
+report:
+  author: Vendr
+  title: Report
+  subject: Monthly Email
+  creator: Irek Romaniuk
+  month: June
+  api: false
+figure1:
+  between_dates: ''
+  inbound_messages: ''
+  blocked_messages: ''
+  delivered_messages: ''
+figure2:
+  malicious_messages: ''
+  malicious_blocked_messages: ''
+  malicious_delivered_messages: ''
+  malicious_messages_url: ''
+  permitted_clicks: ''
+  malicious_messages_att: ''
+  non_rewritten_url: ''
+  imposter_threats:
+  malicious_custom_blocked_messages: ''
+  inc_auto_remediated: ''
+  analyst_hours_saved: ''
+debug:
+  exit_after_xml_report: false
