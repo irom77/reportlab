@@ -21,6 +21,11 @@ if __name__ == "__main__":
     formatted_date = datetime.now().strftime('%B %d, %Y')
     date_range = between_dates(conf.report.month)
     print(f"Date range: {date_range}")
+    
+    # Update the configuration
+    conf.figure1.between_dates = date_range
+    OmegaConf.save(conf, 'configs/_threat_report.yml')
+    
     client = ProofpointAPIClient()
     # result=client.messages_blocked()
     # print(result)
