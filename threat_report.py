@@ -11,7 +11,8 @@ def between_dates(month):
     year = datetime.now().year
     month_num = datetime.strptime(month, '%B').month
     _, last_day = calendar.monthrange(year, month_num)
-    return f"From {month} 1 to {last_day} {year}"
+    first_day = calendar.month_name[month_num]
+    return f"From {first_day} to {last_day} {year}"
 
 
 if __name__ == "__main__":
