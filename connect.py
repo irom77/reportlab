@@ -10,7 +10,7 @@ import calendar
 load_dotenv()
 
 class ProofpointAPIClient:
-
+    # https://help.proofpoint.com/Threat_Insight_Dashboard/API_Documentation/SIEM_API
     def __init__(self, conf):        
         self.sp = os.getenv('sp')  # Replace with your actual service principal
         self.api_key = os.getenv('api_key')  # Replace with your actual API key
