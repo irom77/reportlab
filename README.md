@@ -18,4 +18,6 @@ vars = {
 
 - Add python function `get_xml_by_tag(file_path, tag)` to `xmltags.py` which will read file_path and provide text of nested tag i.e. input sect.tag5 should return text of <sect><tag5>. Return list in case there are multiple matches for the tag. Function should pass the test `test_get_xml_by_tag` from `test_xml.py`
 
+C:\Users\irekr\AppData\Local\Programs\Tesseract-OCR
+
     
